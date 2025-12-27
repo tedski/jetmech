@@ -1,0 +1,37 @@
+services:
+  jetmech:
+    image: eggdrop:1.9.5
+    container_name: jetmech
+    restart: unless-stopped
+    stdin_open: true
+    mem_limit: 64m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    memswap_limit: 64m
+    cpus: "0.25"
+    pids_limit: 64
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024
+    ports:
+      - "${DCC_PORT}:2039"
+    volumes:
+      - ./data:/home/eggdrop/eggdrop/data
+      - ./logs:/home/eggdrop/eggdrop/logs
+    environment:
+      - TZ=${TZ}
+    networks:
+      - jetmech-net
+
+networks:
+  jetmech-net:
